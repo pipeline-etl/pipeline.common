@@ -1,8 +1,8 @@
 {
-  "name": "pipeline/interfaces",
-  "description": "Pipeline.Interfaces contains interfaces used by various Pipeline components",
+  "name": "pipeline/common",
+  "description": "Pipeline.Common contains interfaces and shared classes used by various Pipeline components",
   "keywords": [ "pipeline-etl", "data import", "ETL" ],
-  "homepage": "https://github.com/pipeline-etl/pipeline.interfaces",
+  "homepage": "https://github.com/pipeline-etl/pipeline.common",
   "type": "library",
   "license": "MIT",
   "require": {

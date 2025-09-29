@@ -1,12 +1,12 @@
-# Pipeline.Interfaces
+# Pipeline.Common
 
-Pipeline.Interfaces contains interfaces used by various Pipeline components.
+Pipeline.Common contains interfaces and shared classes used by various Pipeline components.
 
 Installation
 ------------
 
-* Install Pipeline.Interfaces with Composer or with your own installer.
-* Pipeline.Interfaces follows the [semantic versioning][2] standards.
+* Install Pipeline.Common with Composer or with your own installer.
+* Pipeline.Common follows the [semantic versioning][2] standards.
 
 Community
 ---------
@@ -16,9 +16,9 @@ Community
 Contributing
 ------------
 
-Pipeline.Interfaces is an Open Source, community-driven project. Join by contributing code or documentation.
+Pipeline.Common is an Open Source, community-driven project. Join by contributing code or documentation.
 
-If you encounter any issues when using Pipeline.Interfaces you can report them [on github][4]
+If you encounter any issues when using Pipeline.Common you can report them [on github][4]
 
 About Us
 --------
@@ -27,5 +27,5 @@ Pipeline development is spearheaded by [Framna][1].
 
   [1]: https://framna.com
   [2]: https://semver.org
-  [3]: https://github.com/pipeline-etl/pipeline.interfaces
-  [4]: https://github.com/pipeline-etl/pipeline.interfaces/issues
+  [3]: https://github.com/pipeline-etl/pipeline.common
+  [4]: https://github.com/pipeline-etl/pipeline.common/issues
