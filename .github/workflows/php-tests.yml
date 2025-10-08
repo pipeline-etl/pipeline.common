@@ -5,15 +5,15 @@ name: PHP Tests
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  phpcs:
-    uses: lunr-php/actions-templates/.github/workflows/phpcs-lunr.yml@master
-    with:
-      allow-style-failures: false
-      codestyle-branch: '0.11.0'
-      phpcs-whitelist: tests/phpstan.bootstrap.inc.php
-
-  phpstan:
-    uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
+  php-tests:
+    uses: lunr-php/actions-templates/.github/workflows/php-composer.yml@master
     with:
       phpstan-level: 10
+      allow-style-failures: false
       allow-phpstan-failures: false
+      codestyle-branch: '0.11.0'
+      phpcs-whitelist: tests/phpstan.autoload.inc.php tests/test.bootstrap.inc.php
+      php-extensions: uopz
+      stable-php-versions: '["8.1"]'
+      experimental-php-versions: '["8.2","8.3"]'
+      minimum-phpunit-version: '10.5.x'
