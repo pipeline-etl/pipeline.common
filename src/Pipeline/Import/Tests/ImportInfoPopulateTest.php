@@ -9,6 +9,7 @@
 
 namespace Pipeline\Import\Tests;
 
+use Pipeline\Common\Exceptions\InvalidConfigurationException;
 use Pipeline\Import\Flag;
 
 /**
@@ -88,11 +89,11 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
     }
 
     /**
-     * Test populate() with a minimal config.
+     * Test populate() with an invalid flag.
      *
      * @covers Pipeline\Import\ImportInfo::populate
      */
-    public function testPopulateIgnoresInvalidFlags(): void
+    public function testPopulateThrowsExceptionForInvalidFlags(): void
     {
         $this->class->setPipelineIdentifier('foobar');
 
@@ -106,13 +107,10 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
                        ->method('addTag')
                        ->with('contentType', 'foobar');
 
-        $this->class->populate($info);
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid import flag!');
 
-        $this->assertPropertyEquals('target', 'foobar');
-        $this->assertPropertyEquals('contentType', 'foobar');
-        $this->assertPropertySame('hooks', []);
-        $this->assertPropertySame('ranges', []);
-        $this->assertPropertySame('flags', []);
+        $this->class->populate($info);
     }
 
 }

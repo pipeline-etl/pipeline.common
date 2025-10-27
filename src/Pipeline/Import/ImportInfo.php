@@ -10,6 +10,7 @@
 namespace Pipeline\Import;
 
 use Lunr\Ticks\Profiling\Profiler;
+use Pipeline\Common\Exceptions\InvalidConfigurationException;
 use Pipeline\Common\Info;
 
 /**
@@ -216,7 +217,7 @@ class ImportInfo extends Info
                 // @phpstan-ignore identical.alwaysFalse
                 if ($flag === NULL)
                 {
-                    continue;
+                    throw new InvalidConfigurationException('Invalid import flag!');
                 }
 
                 $flags[] = $flag;
