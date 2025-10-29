@@ -18,6 +18,9 @@
         <testsuite name="Common">
             <directory>../src/Pipeline/Common/Tests/</directory>
         </testsuite>
+        <testsuite name="Import">
+            <directory>../src/Pipeline/Import/Tests/</directory>
+        </testsuite>
     </testsuites>
     <coverage>
         <report>
@@ -34,6 +37,7 @@
         </include>
         <exclude>
             <directory>../src/Pipeline/Common/Tests/</directory>
+            <directory>../src/Pipeline/Import/Tests/</directory>
         </exclude>
     </source>
 </phpunit>
