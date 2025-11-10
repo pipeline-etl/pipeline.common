@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains the PipelineNodeLogTest class.
+ * This file contains the NodeLogTest class.
  *
  * SPDX-FileCopyrightText: Copyright 2025 Framna Netherlands B.V., Zwolle, The Netherlands
  * SPDX-License-Identifier: MIT
@@ -13,11 +13,11 @@ use Lunr\Halo\PropertyTraits\PsrLoggerTestTrait;
 use Psr\Log\LogLevel;
 
 /**
- * This class contains tests for the PipelineNode class.
+ * This class contains tests for the Node class.
  *
- * @covers Pipeline\Common\PipelineNode
+ * @covers Pipeline\Common\Node
  */
-class PipelineNodeLogTest extends PipelineNodeTestCase
+class NodeLogTest extends NodeTestCase
 {
 
     use PsrLoggerTestTrait;
@@ -25,7 +25,7 @@ class PipelineNodeLogTest extends PipelineNodeTestCase
     /**
      * Test that log() logs message.
      *
-     * @covers Pipeline\Common\PipelineNode::log
+     * @covers Pipeline\Common\Node::log
      */
     public function testLogLogsMessageWithoutIndex(): void
     {
@@ -47,7 +47,7 @@ class PipelineNodeLogTest extends PipelineNodeTestCase
     /**
      * Test that logIncompleteConfiguration() logs message.
      *
-     * @covers Pipeline\Common\PipelineNode::logIncompleteConfiguration
+     * @covers Pipeline\Common\Node::logIncompleteConfiguration
      */
     public function testLogIncompleteConfigurationLogsMessageWithoutIndex(): void
     {
@@ -69,7 +69,7 @@ class PipelineNodeLogTest extends PipelineNodeTestCase
     /**
      * Test that logInvalidConfiguration() logs message.
      *
-     * @covers Pipeline\Common\PipelineNode::logInvalidConfiguration
+     * @covers Pipeline\Common\Node::logInvalidConfiguration
      */
     public function testLogInvalidConfigurationLogsMessageWithoutIndex(): void
     {

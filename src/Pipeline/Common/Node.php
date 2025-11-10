@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains the PipelineNode class.
+ * This file contains the Node class.
  *
  * SPDX-FileCopyrightText: Copyright 2025 Framna Netherlands B.V., Zwolle, The Netherlands
  * SPDX-License-Identifier: MIT
@@ -17,7 +17,7 @@ use Psr\Log\LogLevel;
  *
  * @phpstan-type Item array<string,scalar|array<array-key, mixed>|object|null>
  */
-abstract class PipelineNode
+abstract class Node
 {
 
     /**
