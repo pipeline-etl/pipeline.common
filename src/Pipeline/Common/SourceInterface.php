@@ -12,8 +12,9 @@ namespace Pipeline\Common;
 /**
  * Pipeline Source Interface.
  *
+ * @phpstan-import-type Item from Node
  * @phpstan-type SourceConfig array<string, scalar|array<string, mixed>>
- * @phpstan-type FetchedData string[]
+ * @phpstan-type FetchedData string[]|list<Item[]>
  */
 interface SourceInterface
 {
