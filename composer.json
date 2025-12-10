@@ -1,5 +1,5 @@
 {
-  "name": "pipeline/common",
+  "name": "pipeline-etl/common",
   "description": "Pipeline.Common contains interfaces and shared classes used by various Pipeline components",
   "keywords": [ "pipeline-etl", "data import", "ETL" ],
   "homepage": "https://github.com/pipeline-etl/pipeline.common",
