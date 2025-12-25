@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
  * Parser class.
  *
  * @phpstan-import-type Item from Node
+ * @phpstan-import-type ProcessedItem from Node
  * @phpstan-import-type ProcessorConfig from ProcessorInterface
  */
 abstract class Parser extends Node
@@ -54,7 +55,7 @@ abstract class Parser extends Node
      * @param Item[]          $data   Source data to process
      * @param ProcessorConfig $config Configuration parameters necessary to process the data
      *
-     * @return Item[] Processed data
+     * @return ProcessedItem[] Processed data
      */
     abstract public function process(array $data, array $config): array;
 

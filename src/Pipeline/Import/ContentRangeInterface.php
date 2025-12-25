@@ -14,7 +14,7 @@ use Pipeline\Common\Node;
 /**
  * Pipeline Content Range.
  *
- * @phpstan-import-type Item from Node
+ * @phpstan-import-type ProcessedItem from Node
  * @phpstan-import-type ContentRangeConfig from ImportInfo
  */
 interface ContentRangeInterface
@@ -23,7 +23,7 @@ interface ContentRangeInterface
     /**
      * Set the range data.
      *
-     * @param Item[]             $data   Full data set
+     * @param ProcessedItem[]    $data   Full data set
      * @param ContentRangeConfig $config Range config
      *
      * @return void

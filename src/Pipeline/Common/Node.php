@@ -16,6 +16,7 @@ use Psr\Log\LogLevel;
  * Pipeline Node class.
  *
  * @phpstan-type Item array<string,scalar|array<array-key, mixed>|object|null>
+ * @phpstan-type ProcessedItem array<string,scalar|null>
  */
 abstract class Node
 {
