@@ -14,7 +14,12 @@ use Pipeline\Common\Node;
 /**
  * Interface for interacting with the target of the import.
  *
- * @phpstan-import-type Item from Node
+ * @phpstan-import-type ProcessedItem from Node
+ * @phpstan-type SplitUpdateData array{
+ *     new: ProcessedItem[],
+ *     updated: ProcessedItem[],
+ *     obsolete: ProcessedItem[],
+ * }
  * @phpstan-type UniqueKey array{
  *     name: string,
  *     keys: string[]
@@ -56,7 +61,7 @@ interface ImportTargetInterface
     /**
      * Update information.
      *
-     * @param Item[]                  $data   New information
+     * @param SplitUpdateData         $data   New information
      * @param ContentRangeInterface[] $ranges Data subset specifiers
      *
      * @return int Number of affected items
@@ -69,7 +74,7 @@ interface ImportTargetInterface
      * @param string[]|null           $fields Array of field names to select
      * @param ContentRangeInterface[] $ranges Data subset specifiers
      *
-     * @return Item[] Array of items
+     * @return ProcessedItem[] Array of items
      */
     public function getData(?array $fields = NULL, array $ranges = []): array;
 
