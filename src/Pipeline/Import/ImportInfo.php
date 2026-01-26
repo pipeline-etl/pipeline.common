@@ -18,7 +18,7 @@ use Pipeline\Common\Info;
  *
  * @phpstan-type HookIdentifier string
  * @phpstan-type RangeIdentifier string
- * @phpstan-type ContentRangeConfig array<string, string>
+ * @phpstan-type ContentRangeConfig array<string, scalar>
  * @phpstan-type HookConfig array<string, mixed>
  * @phpstan-type ContentRange array<RangeIdentifier, ContentRangeConfig>
  * @phpstan-type Hook array<HookIdentifier, HookConfig>
