@@ -228,7 +228,7 @@ class Locator
      *
      * @return (FlattenerInterface&Node)|null Instance of a Flattener class
      */
-    protected function getFlattener(string $name): (FlattenerInterface&Node)|null
+    public function getFlattener(string $name): (FlattenerInterface&Node)|null
     {
         return $this->getInstance($name, Element::Flattener);
     }
@@ -240,7 +240,7 @@ class Locator
      *
      * @return Parser|null Instance of a Parser class
      */
-    protected function getParser(string $name): ?Parser
+    public function getParser(string $name): ?Parser
     {
         return $this->getInstance($name, Element::Parser);
     }

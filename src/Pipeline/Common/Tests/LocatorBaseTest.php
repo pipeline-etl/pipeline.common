@@ -139,6 +139,16 @@ class LocatorBaseTest extends LocatorTestCase
     }
 
     /**
+     * Test that getLogger() returns the logger.
+     *
+     * @covers \Pipeline\Common\Locator::getLogger
+     */
+    public function testGetLoggerReturnsLogger(): void
+    {
+        $this->assertSame($this->logger, $this->class->getLogger());
+    }
+
+    /**
      * Test that setProfiler() sets the profiler.
      *
      * @covers \Pipeline\Common\Locator::setProfiler

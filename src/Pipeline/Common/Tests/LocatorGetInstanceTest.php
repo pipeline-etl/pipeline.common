@@ -14,7 +14,6 @@ use Lunr\Ticks\Profiling\Profiler;
 use Lunr\Ticks\TracingControllerInterface;
 use Lunr\Ticks\TracingInfoInterface;
 use PHPUnit\Framework\MockObject\MockObject;
-use Pipeline\Common\Element;
 use Pipeline\Common\FlattenerInterface;
 use Pipeline\Common\Node;
 use Pipeline\Common\Parser;
@@ -132,69 +131,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
     }
 
     /**
-     * Test that getInstance() returns NULL when the requested class couldn't be found.
+     * Test that getProcessor() caches an instantiated processor in the locator.
      *
-     * @covers Pipeline\Common\Locator::getInstance
+     * @covers Pipeline\Common\Locator::getProcessor
      */
-    public function testGetInstanceReturnsNullIfClassNotFound(): void
-    {
-        $method = $this->getReflectionMethod('getInstance');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo', Element::Processor ]));
-    }
-
-    /**
-     * Test that getInstance() returns an instance from the locator.
-     *
-     * @covers Pipeline\Common\Locator::getInstance
-     */
-    public function testGetInstanceFetchesInstanceFromLocator(): void
-    {
-        $this->locator->expects($this->once())
-                      ->method('has')
-                      ->with('mockprocessor')
-                      ->willReturn(TRUE);
-
-        $this->locator->expects($this->once())
-                      ->method('get')
-                      ->with('mockprocessor')
-                      ->willReturn($this->processor);
-
-        $method = $this->getReflectionMethod('getInstance');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock', Element::Processor ]);
-
-        $this->assertInstanceOf(ProcessorInterface::class, $instance);
-    }
-
-    /**
-     * Test that getInstance() returns an autoloaded instance from a custom namespace.
-     *
-     * @covers Pipeline\Common\Locator::getInstance
-     */
-    public function testGetInstanceAutoloadsInstanceFromCustomNamespace(): void
+    public function testGetProcessorCachesLoadedInstance(): void
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getInstance');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo', Element::Processor ]);
-
-        $this->assertInstanceOf(FooProcessor::class, $instance);
-    }
-
-    /**
-     * Test that getInstance() caches an instantiated processor in the locator.
-     *
-     * @covers Pipeline\Common\Locator::getInstance
-     */
-    public function testGetInstanceCachesLoadedProcessorInLocator(): void
-    {
-        $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
-
-        $method = $this->getReflectionMethod('getInstance');
-
-        $method->invokeArgs($this->class, [ 'foo', Element::Processor ]);
+        $this->class->getProcessor('foo');
 
         $value = $this->getReflectionPropertyValue('objectCache');
 
@@ -203,17 +148,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
     }
 
     /**
-     * Test that getInstance() caches an instantiated preprocessor in the locator.
+     * Test that getPreprocessor() caches an instantiated preprocessor in the locator.
      *
-     * @covers Pipeline\Common\Locator::getInstance
+     * @covers Pipeline\Common\Locator::getPreprocessor
      */
-    public function testGetInstanceCachesLoadedPreprocessorInLocator(): void
+    public function testGetPreprocessorCachesLoadedInstance(): void
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getInstance');
-
-        $method->invokeArgs($this->class, [ 'foo', Element::Preprocessor ]);
+        $this->class->getPreprocessor('foo');
 
         $value = $this->getReflectionPropertyValue('objectCache');
 
@@ -228,9 +171,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetSourceReturnsNullIfClassNotFound(): void
     {
-        $method = $this->getReflectionMethod('getSource');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo' ]));
+        $this->assertNull($this->class->getSource('foo'));
     }
 
     /**
@@ -250,9 +191,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mocksource')
                       ->willReturn($this->source);
 
-        $method = $this->getReflectionMethod('getSource');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getSource('mock');
 
         $this->assertInstanceOf(SourceInterface::class, $instance);
     }
@@ -271,9 +210,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mocksource')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getSource');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getSource('mock');
 
         $this->assertInstanceOf(SourceInterface::class, $instance);
     }
@@ -287,9 +224,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getSource');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo' ]);
+        $instance = $this->class->getSource('foo');
 
         $this->assertInstanceOf(FooSource::class, $instance);
     }
@@ -301,9 +236,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetFlattenerReturnsNullIfClassNotFound(): void
     {
-        $method = $this->getReflectionMethod('getFlattener');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo' ]));
+        $this->assertNull($this->class->getFlattener('foo'));
     }
 
     /**
@@ -323,9 +256,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockflattener')
                       ->willReturn($this->flattener);
 
-        $method = $this->getReflectionMethod('getFlattener');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getFlattener('mock');
 
         $this->assertInstanceOf(FlattenerInterface::class, $instance);
     }
@@ -344,9 +275,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockflattener')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getFlattener');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getFlattener('mock');
 
         $this->assertInstanceOf(FlattenerInterface::class, $instance);
     }
@@ -360,9 +289,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getFlattener');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo' ]);
+        $instance = $this->class->getFlattener('foo');
 
         $this->assertInstanceOf(FooFlattener::class, $instance);
     }
@@ -374,9 +301,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetPreprocessorReturnsNullIfClassNotFound(): void
     {
-        $method = $this->getReflectionMethod('getPreprocessor');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo' ]));
+        $this->assertNull($this->class->getPreprocessor('foo'));
     }
 
     /**
@@ -396,9 +321,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockpreprocessor')
                       ->willReturn($this->preprocessor);
 
-        $method = $this->getReflectionMethod('getPreprocessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getPreprocessor('mock');
 
         $this->assertInstanceOf(PreprocessorInterface::class, $instance);
     }
@@ -417,9 +340,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockpreprocessor')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getPreprocessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getPreprocessor('mock');
 
         $this->assertInstanceOf(PreprocessorInterface::class, $instance);
     }
@@ -433,9 +354,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getPreprocessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo' ]);
+        $instance = $this->class->getPreprocessor('foo');
 
         $this->assertInstanceOf(FooPreprocessor::class, $instance);
     }
@@ -452,9 +371,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('fooprocessor')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getProcessor');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo' ]));
+        $this->assertNull($this->class->getProcessor('foo'));
     }
 
     /**
@@ -474,9 +391,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockprocessor')
                       ->willReturn($this->processor);
 
-        $method = $this->getReflectionMethod('getProcessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getProcessor('mock');
 
         $this->assertInstanceOf(ProcessorInterface::class, $instance);
     }
@@ -495,9 +410,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockprocessor')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getProcessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getProcessor('mock');
 
         $this->assertInstanceOf(ProcessorInterface::class, $instance);
     }
@@ -511,9 +424,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
 
-        $method = $this->getReflectionMethod('getProcessor');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo' ]);
+        $instance = $this->class->getProcessor('foo');
 
         $this->assertInstanceOf(FooProcessor::class, $instance);
     }
@@ -525,9 +436,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetParserReturnsNullIfClassNotFound(): void
     {
-        $method = $this->getReflectionMethod('getParser');
-
-        $this->assertNull($method->invokeArgs($this->class, [ 'foo' ]));
+        $this->assertNull($this->class->getParser('foo'));
     }
 
     /**
@@ -548,9 +457,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockparser')
                       ->willReturn($this->parser);
 
-        $method = $this->getReflectionMethod('getParser');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getParser('mock');
 
         $this->assertInstanceOf(Parser::class, $instance);
     }
@@ -569,9 +476,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
                       ->with('mockparser')
                       ->willReturn(FALSE);
 
-        $method = $this->getReflectionMethod('getParser');
-
-        $instance = $method->invokeArgs($this->class, [ 'mock' ]);
+        $instance = $this->class->getParser('mock');
 
         $this->assertInstanceOf(Parser::class, $instance);
     }
@@ -586,9 +491,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Common\Tests\Helpers' ]);
         $this->setReflectionPropertyValue('profiler', $this->profiler);
 
-        $method = $this->getReflectionMethod('getParser');
-
-        $instance = $method->invokeArgs($this->class, [ 'foo' ]);
+        $instance = $this->class->getParser('foo');
 
         $this->assertInstanceOf(FooParser::class, $instance);
     }
