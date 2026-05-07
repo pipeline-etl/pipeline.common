@@ -30,8 +30,8 @@ class ItemObserverGetIdentifierKeysTest extends ItemObserverTestCase
 
         $this->setReflectionPropertyValue('identifierKeys', $keys);
 
-        $this->importTarget->expects($this->never())
-                           ->method('getIdentifierKeys');
+        $this->importTarget->shouldReceive('getIdentifierKeys')
+                           ->never();
 
         $this->assertEquals($keys, $this->class->getIdentifierKeys());
     }
@@ -45,9 +45,9 @@ class ItemObserverGetIdentifierKeysTest extends ItemObserverTestCase
     {
         $keys = [ 'hello', 'world' ];
 
-        $this->importTarget->expects($this->once())
-                           ->method('getIdentifierKeys')
-                           ->willReturn($keys);
+        $this->importTarget->shouldReceive('getIdentifierKeys')
+                           ->once()
+                           ->andReturn($keys);
 
         $this->assertEquals($keys, $this->class->getIdentifierKeys());
     }
@@ -59,9 +59,9 @@ class ItemObserverGetIdentifierKeysTest extends ItemObserverTestCase
      */
     public function testGetIdentifierKeysThrowsExceptionWhenNoneFound(): void
     {
-        $this->importTarget->expects($this->once())
-                           ->method('getIdentifierKeys')
-                           ->willReturn([]);
+        $this->importTarget->shouldReceive('getIdentifierKeys')
+                           ->once()
+                           ->andReturn([]);
 
         $this->expectExceptionMessage('No object identifier found in content model!');
         $this->expectException(DatabaseException::class);

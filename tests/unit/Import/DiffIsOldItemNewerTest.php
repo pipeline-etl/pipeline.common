@@ -38,9 +38,9 @@ class DiffIsOldItemNewerTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('isOldItemNewer');
 
@@ -68,9 +68,9 @@ class DiffIsOldItemNewerTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('isOldItemNewer');
 
@@ -98,9 +98,9 @@ class DiffIsOldItemNewerTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('isOldItemNewer');
 

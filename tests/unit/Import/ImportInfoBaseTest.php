@@ -132,8 +132,8 @@ class ImportInfoBaseTest extends ImportInfoTestCase
             DataDiffCategory::Total->value    => 13,
         ];
 
-        $this->profiler->expects($this->once())
-                       ->method('addFields')
+        $this->profiler->shouldReceive('addFields')
+                       ->once()
                        ->with($results);
 
         $this->class->setResults(1, 2, 3, 4, 5);

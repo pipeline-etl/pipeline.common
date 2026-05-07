@@ -10,7 +10,9 @@
 namespace Pipeline\Tests\Import;
 
 use Lunr\Halo\LunrBaseTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
 use Pipeline\Import\Diff;
 use Pipeline\Import\ItemObserverInterface;
 
@@ -22,11 +24,13 @@ use Pipeline\Import\ItemObserverInterface;
 abstract class DiffTestCase extends LunrBaseTestCase
 {
 
+    use MockeryPHPUnitIntegration;
+
     /**
      * Mock instance of an item observer.
-     * @var ItemObserverInterface&MockObject
+     * @var ItemObserverInterface&MockInterface
      */
-    protected ItemObserverInterface&MockObject $observer;
+    protected ItemObserverInterface&MockInterface $observer;
 
     /**
      * Instance of the tested class.
@@ -39,8 +43,7 @@ abstract class DiffTestCase extends LunrBaseTestCase
      */
     public function setUp(): void
     {
-        $this->observer = $this->getMockBuilder(ItemObserverInterface::class)
-                               ->getMock();
+        $this->observer = Mockery::mock(ItemObserverInterface::class);
 
         $this->class = new Diff($this->observer);
 

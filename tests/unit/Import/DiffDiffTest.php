@@ -45,12 +45,12 @@ class DiffDiffTest extends DiffTestCase
             'obsolete' => [],
         ];
 
-        $this->observer->expects($this->exactly(3))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(3)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->never())
-                       ->method('getTimeKeys');
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->never();
 
         $this->class->diff($old, $new);
 
@@ -95,13 +95,13 @@ class DiffDiffTest extends DiffTestCase
             ],
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'revision' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->times(2)
+                       ->andReturn([ 'revision' ]);
 
         $this->class->diff($old, $new);
 
@@ -170,13 +170,13 @@ class DiffDiffTest extends DiffTestCase
             ],
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'revision' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->times(2)
+                       ->andReturn([ 'revision' ]);
 
         $this->class->diff($old, $new);
 
@@ -225,12 +225,12 @@ class DiffDiffTest extends DiffTestCase
             'obsolete' => [],
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->never())
-                       ->method('getTimeKeys');
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->never();
 
         $this->class->diff($old, $new);
 
@@ -267,12 +267,12 @@ class DiffDiffTest extends DiffTestCase
             ],
         ];
 
-        $this->observer->expects($this->exactly(3))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(3)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->never())
-                       ->method('getTimeKeys');
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->never();
 
         $this->class->diff($old, $new);
 
@@ -306,13 +306,13 @@ class DiffDiffTest extends DiffTestCase
             'obsolete' => [],
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'revision' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'revision' ]);
 
         $this->class->diff($old, $new);
 
@@ -346,13 +346,13 @@ class DiffDiffTest extends DiffTestCase
             'obsolete' => [],
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'revision' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->times(2)
+                       ->andReturn([ 'revision' ]);
 
         $this->class->diff($old, $new);
 
@@ -392,13 +392,13 @@ class DiffDiffTest extends DiffTestCase
 
         $diffed = [ '1' => [ 'revision' => 2 ] ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->times(2)
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'revision' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'revision' ]);
 
         $this->setReflectionPropertyValue('skipTimeKeyOnlyChange', FALSE);
 
@@ -432,12 +432,12 @@ class DiffDiffTest extends DiffTestCase
             'obsolete' => [],
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getItemIdentifier')
-                       ->willReturnCallback(fn($item): string => (string) $item['id']);
+        $this->observer->shouldReceive('getItemIdentifier')
+                       ->once()
+                       ->andReturnUsing(fn($item): string => (string) $item['id']);
 
-        $this->observer->expects($this->never())
-                       ->method('getTimeKeys');
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->never();
 
         $this->class->diff($old, $new);
 

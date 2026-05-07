@@ -27,12 +27,16 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
      */
     public function testPopulateWithMinimalConfig(): void
     {
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
+                       ->with('pipeline', 'foobar');
+
         $this->class->setPipelineIdentifier('foobar');
 
         $info = [];
 
-        $this->profiler->expects($this->once())
-                       ->method('addTag')
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
                        ->with('contentType', 'foobar');
 
         $this->class->populate($info);
@@ -51,6 +55,10 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
      */
     public function testPopulateWithFullConfig(): void
     {
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
+                       ->with('pipeline', 'foobar');
+
         $this->class->setPipelineIdentifier('foobar');
 
         $info = [
@@ -75,8 +83,8 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
             ]
         ];
 
-        $this->profiler->expects($this->once())
-                       ->method('addTag')
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
                        ->with('contentType', 'baz');
 
         $this->class->populate($info);
@@ -95,6 +103,10 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
      */
     public function testPopulateThrowsExceptionForInvalidFlags(): void
     {
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
+                       ->with('pipeline', 'foobar');
+
         $this->class->setPipelineIdentifier('foobar');
 
         $info = [
@@ -103,8 +115,8 @@ class ImportInfoPopulateTest extends ImportInfoTestCase
             ],
         ];
 
-        $this->profiler->expects($this->once())
-                       ->method('addTag')
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
                        ->with('contentType', 'foobar');
 
         $this->expectException(InvalidConfigurationException::class);

@@ -38,9 +38,9 @@ class DiffShouldSkipItemTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('shouldSkipItem');
 
@@ -68,9 +68,9 @@ class DiffShouldSkipItemTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->times(2)
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('shouldSkipItem');
 
@@ -98,9 +98,9 @@ class DiffShouldSkipItemTest extends DiffTestCase
             'bool'      => TRUE,
         ];
 
-        $this->observer->expects($this->exactly(2))
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->times(2)
+                       ->andReturn([ 'timestamp' ]);
 
         $method = $this->getReflectionMethod('shouldSkipItem');
 
@@ -128,9 +128,9 @@ class DiffShouldSkipItemTest extends DiffTestCase
             'bool'      => FALSE,
         ];
 
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn([ 'timestamp' ]);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn([ 'timestamp' ]);
 
         $this->setReflectionPropertyValue('skipTimeKeyOnlyChange', FALSE);
 

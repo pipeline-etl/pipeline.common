@@ -30,8 +30,8 @@ class ItemObserverGetTimeKeysTest extends ItemObserverTestCase
 
         $this->setReflectionPropertyValue('timeKeys', $keys);
 
-        $this->importTarget->expects($this->never())
-                           ->method('getTimeKeys');
+        $this->importTarget->shouldReceive('getTimeKeys')
+                           ->never();
 
         $this->assertEquals($keys, $this->class->getTimeKeys());
     }
@@ -45,9 +45,9 @@ class ItemObserverGetTimeKeysTest extends ItemObserverTestCase
     {
         $keys = [ 'version' ];
 
-        $this->importTarget->expects($this->once())
-                           ->method('getTimeKeys')
-                           ->willReturn($keys);
+        $this->importTarget->shouldReceive('getTimeKeys')
+                           ->once()
+                           ->andReturn($keys);
 
         $this->assertEquals($keys, $this->class->getTimeKeys());
     }
@@ -59,9 +59,9 @@ class ItemObserverGetTimeKeysTest extends ItemObserverTestCase
      */
     public function testGetTimeKeysThrowsExceptionWhenNoneFound(): void
     {
-        $this->importTarget->expects($this->once())
-                           ->method('getTimeKeys')
-                           ->willReturn([]);
+        $this->importTarget->shouldReceive('getTimeKeys')
+                           ->once()
+                           ->andReturn([]);
 
         $this->expectExceptionMessage('No time key found in content model!');
         $this->expectException(DatabaseException::class);

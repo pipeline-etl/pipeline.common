@@ -151,9 +151,9 @@ class DiffIsTimeKeyOnlyChangeTest extends DiffTestCase
      */
     public function testIsTimeKeyOnlyChangeReturnsFalseIfMoreChanges($old, $new, $keys): void
     {
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn($keys);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn($keys);
 
         $method = $this->getReflectionMethod('isTimeKeyOnlyChange');
 
@@ -172,9 +172,9 @@ class DiffIsTimeKeyOnlyChangeTest extends DiffTestCase
      */
     public function testIsTimeKeyOnlyChangeReturnsTrueIfTimeKeyOnlyChange($old, $new, $keys): void
     {
-        $this->observer->expects($this->once())
-                       ->method('getTimeKeys')
-                       ->willReturn($keys);
+        $this->observer->shouldReceive('getTimeKeys')
+                       ->once()
+                       ->andReturn($keys);
 
         $method = $this->getReflectionMethod('isTimeKeyOnlyChange');
 

@@ -10,7 +10,9 @@
 namespace Pipeline\Tests\Import;
 
 use Lunr\Halo\LunrBaseTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
 use Pipeline\Import\ImportTargetInterface;
 use Pipeline\Import\ItemObserver;
 
@@ -22,11 +24,13 @@ use Pipeline\Import\ItemObserver;
 abstract class ItemObserverTestCase extends LunrBaseTestCase
 {
 
+    use MockeryPHPUnitIntegration;
+
     /**
      * Mock instance of an import target.
-     * @var ImportTargetInterface&MockObject
+     * @var ImportTargetInterface&MockInterface
      */
-    protected ImportTargetInterface&MockObject $importTarget;
+    protected ImportTargetInterface&MockInterface $importTarget;
 
     /**
      * Instance of the tested class.
@@ -39,8 +43,7 @@ abstract class ItemObserverTestCase extends LunrBaseTestCase
      */
     public function setUp(): void
     {
-        $this->importTarget = $this->getMockBuilder(ImportTargetInterface::class)
-                                   ->getMock();
+        $this->importTarget = Mockery::mock(ImportTargetInterface::class);
 
         $this->class = new ItemObserver($this->importTarget);
 
