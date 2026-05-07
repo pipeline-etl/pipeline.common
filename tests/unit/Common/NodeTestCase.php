@@ -13,7 +13,6 @@ use Lunr\Halo\LunrBaseTestCase;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Pipeline\Common\Node;
 use Psr\Log\LoggerInterface;
 
@@ -30,9 +29,9 @@ abstract class NodeTestCase extends LunrBaseTestCase
 
     /**
      * Mock instance of the Logger.
-     * @var LoggerInterface&MockObject
+     * @var LoggerInterface&MockInterface
      */
-    protected LoggerInterface&MockObject $logger;
+    protected LoggerInterface&MockInterface $logger;
 
     /**
      * Instance of the tested class.
@@ -45,8 +44,7 @@ abstract class NodeTestCase extends LunrBaseTestCase
      */
     public function setUp(): void
     {
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)
-                             ->getMock();
+        $this->logger = Mockery::mock(LoggerInterface::class);
 
         $this->class = Mockery::mock(Node::class, [ $this->logger ]);
 

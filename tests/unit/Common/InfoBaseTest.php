@@ -34,8 +34,8 @@ class InfoBaseTest extends InfoTestCase
     {
         $identifier = 'foo-content';
 
-        $this->profiler->expects($this->once())
-                       ->method('addTag')
+        $this->profiler->shouldReceive('addTag')
+                       ->once()
                        ->with('pipeline', $identifier);
 
         $this->class->setPipelineIdentifier($identifier);

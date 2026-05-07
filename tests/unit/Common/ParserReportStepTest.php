@@ -24,12 +24,12 @@ class ParserReportStepTest extends ParserTestCase
      */
     public function testReportStepLogsInformation(): void
     {
-        $this->profiler->expects($this->once())
-                       ->method('startNewSpan')
+        $this->profiler->shouldReceive('startNewSpan')
+                       ->once()
                        ->with('Log Message');
 
-        $this->logger->expects($this->once())
-                     ->method('notice')
+        $this->logger->shouldReceive('notice')
+                     ->once()
                      ->with('Log Message');
 
         $method = $this->getReflectionMethod('reportStep');

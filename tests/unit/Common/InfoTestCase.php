@@ -10,11 +10,10 @@
 namespace Pipeline\Tests\Common;
 
 use Lunr\Halo\LunrBaseTestCase;
-use Lunr\Ticks\EventLogging\Null\NullEvent;
 use Lunr\Ticks\Profiling\Profiler;
-use Lunr\Ticks\TracingControllerInterface;
-use Lunr\Ticks\TracingInfoInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
 use Pipeline\Common\Info;
 
 /**
@@ -25,17 +24,13 @@ use Pipeline\Common\Info;
 abstract class InfoTestCase extends LunrBaseTestCase
 {
 
-    /**
-     * Instance of the Profiler.
-     * @var Profiler&MockObject
-     */
-    protected Profiler&MockObject $profiler;
+    use MockeryPHPUnitIntegration;
 
     /**
-     * Mock instance of the tracing controller class.
-     * @var TracingControllerInterface&TracingInfoInterface&MockObject
+     * Instance of the Profiler.
+     * @var Profiler&MockInterface
      */
-    protected TracingControllerInterface&TracingInfoInterface&MockObject $controller;
+    protected Profiler&MockInterface $profiler;
 
     /**
      * Instance of the tested class.
@@ -48,18 +43,7 @@ abstract class InfoTestCase extends LunrBaseTestCase
      */
     public function setUp(): void
     {
-        $this->controller = $this->createMockForIntersectionOfInterfaces([
-            TracingControllerInterface::class,
-            TracingInfoInterface::class,
-        ]);
-
-        $event = $this->getMockBuilder(NullEvent::class)
-                      ->disableOriginalConstructor()
-                      ->getMock();
-
-        $this->profiler = $this->getMockBuilder(Profiler::class)
-                               ->setConstructorArgs([ $event, $this->controller ])
-                               ->getMock();
+        $this->profiler = Mockery::mock(Profiler::class);
 
         $this->class = new Info($this->profiler);
 
@@ -72,17 +56,6 @@ abstract class InfoTestCase extends LunrBaseTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-
-        $traceID = '7b333e15-aa78-4957-a402-731aecbb358e';
-        $spanID  = '24ec5f90-7458-4dd5-bb51-7a1e8f4baafe';
-
-        $this->controller->expects($this->once())
-                         ->method('getTraceId')
-                         ->willReturn($traceID);
-
-        $this->controller->expects($this->once())
-                         ->method('getSpanId')
-                         ->willReturn($spanID);
 
         unset($this->class);
     }

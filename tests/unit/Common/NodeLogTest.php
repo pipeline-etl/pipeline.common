@@ -35,8 +35,8 @@ class NodeLogTest extends NodeTestCase
             'message' => 'Message',
         ];
 
-        $this->logger->expects($this->once())
-                     ->method('log')
+        $this->logger->shouldReceive('log')
+                     ->once()
                      ->with('warning', '[{class}]{index} {message}', $context);
 
         $method = $this->getReflectionMethod('log');
@@ -57,8 +57,8 @@ class NodeLogTest extends NodeTestCase
             'message' => 'Incomplete configuration: Message',
         ];
 
-        $this->logger->expects($this->once())
-                     ->method('log')
+        $this->logger->shouldReceive('log')
+                     ->once()
                      ->with('warning', '[{class}]{index} {message}', $context);
 
         $method = $this->getReflectionMethod('logIncompleteConfiguration');
@@ -79,8 +79,8 @@ class NodeLogTest extends NodeTestCase
             'message' => 'Invalid configuration: Message',
         ];
 
-        $this->logger->expects($this->once())
-                     ->method('log')
+        $this->logger->shouldReceive('log')
+                     ->once()
                      ->with('warning', '[{class}]{index} {message}', $context);
 
         $method = $this->getReflectionMethod('logInvalidConfiguration');

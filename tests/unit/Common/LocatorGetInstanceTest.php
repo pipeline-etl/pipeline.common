@@ -9,11 +9,9 @@
 
 namespace Pipeline\Tests\Common;
 
-use Lunr\Ticks\EventLogging\Null\NullEvent;
 use Lunr\Ticks\Profiling\Profiler;
-use Lunr\Ticks\TracingControllerInterface;
-use Lunr\Ticks\TracingInfoInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
+use Mockery\MockInterface;
 use Pipeline\Common\FlattenerInterface;
 use Pipeline\Common\Node;
 use Pipeline\Common\Parser;
@@ -35,16 +33,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
 {
 
     /**
-     * Mock instance of the tracing controller class.
-     * @var TracingControllerInterface&TracingInfoInterface&MockObject
-     */
-    private TracingControllerInterface&TracingInfoInterface&MockObject $controller;
-
-    /**
      * Mock instance of the Profiler class.
-     * @var Profiler&MockObject
+     * @var Profiler&MockInterface
      */
-    protected Profiler&MockObject $profiler;
+    protected Profiler&MockInterface $profiler;
 
     /**
      * Mock instance of a Pipeline Flattener
@@ -83,18 +75,7 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         parent::setUp();
 
-        $this->controller = $this->createMockForIntersectionOfInterfaces([
-            TracingControllerInterface::class,
-            TracingInfoInterface::class,
-        ]);
-
-        $event = $this->getMockBuilder(NullEvent::class)
-                      ->disableOriginalConstructor()
-                      ->getMock();
-
-        $this->profiler = $this->getMockBuilder(Profiler::class)
-                               ->setConstructorArgs([ $event, $this->controller ])
-                               ->getMock();
+        $this->profiler = Mockery::mock(Profiler::class);
 
         $this->flattener    = new FooFlattener($this->logger);
         $this->processor    = new FooProcessor($this->logger);
@@ -110,18 +91,6 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         parent::tearDown();
 
-        $traceID = '7b333e15-aa78-4957-a402-731aecbb358e';
-        $spanID  = '24ec5f90-7458-4dd5-bb51-7a1e8f4baafe';
-
-        $this->controller->expects($this->once())
-                         ->method('getTraceId')
-                         ->willReturn($traceID);
-
-        $this->controller->expects($this->once())
-                         ->method('getSpanId')
-                         ->willReturn($spanID);
-
-        unset($this->controller);
         unset($this->profiler);
         unset($this->flattener);
         unset($this->processor);
@@ -138,6 +107,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     public function testGetProcessorCachesLoadedInstance(): void
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
+
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooprocessor')
+                      ->andReturn(FALSE);
 
         $this->class->getProcessor('foo');
 
@@ -156,6 +130,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
 
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('foopreprocessor')
+                      ->andReturn(FALSE);
+
         $this->class->getPreprocessor('foo');
 
         $value = $this->getReflectionPropertyValue('objectCache');
@@ -171,6 +150,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetSourceReturnsNullIfClassNotFound(): void
     {
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('foosource')
+                      ->andReturn(FALSE);
+
+        $this->logger->shouldReceive('warning')
+                     ->once()
+                     ->with('Unable to find pipeline component: ({name})', [ 'name' => 'FooSource' ]);
+
         $this->assertNull($this->class->getSource('foo'));
     }
 
@@ -181,15 +169,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetSourceFetchesInstanceFromLocator(): void
     {
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mocksource')
-                      ->willReturn(TRUE);
+                      ->andReturn(TRUE);
 
-        $this->locator->expects($this->once())
-                      ->method('get')
+        $this->locator->shouldReceive('get')
+                      ->once()
                       ->with('mocksource')
-                      ->willReturn($this->source);
+                      ->andReturn($this->source);
 
         $instance = $this->class->getSource('mock');
 
@@ -205,10 +193,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('objectCache', [ 'mocksource' => $this->source ]);
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mocksource')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getSource('mock');
 
@@ -224,6 +212,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
 
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('foosource')
+                      ->andReturn(FALSE);
+
         $instance = $this->class->getSource('foo');
 
         $this->assertInstanceOf(FooSource::class, $instance);
@@ -236,6 +229,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetFlattenerReturnsNullIfClassNotFound(): void
     {
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooflattener')
+                      ->andReturn(FALSE);
+
+        $this->logger->shouldReceive('warning')
+                     ->once()
+                     ->with('Unable to find pipeline component: ({name})', [ 'name' => 'FooFlattener' ]);
+
         $this->assertNull($this->class->getFlattener('foo'));
     }
 
@@ -246,15 +248,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetFlattenerFetchesInstanceFromLocator(): void
     {
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockflattener')
-                      ->willReturn(TRUE);
+                      ->andReturn(TRUE);
 
-        $this->locator->expects($this->once())
-                      ->method('get')
+        $this->locator->shouldReceive('get')
+                      ->once()
                       ->with('mockflattener')
-                      ->willReturn($this->flattener);
+                      ->andReturn($this->flattener);
 
         $instance = $this->class->getFlattener('mock');
 
@@ -270,10 +272,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('objectCache', [ 'mockflattener' => $this->flattener ]);
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockflattener')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getFlattener('mock');
 
@@ -289,6 +291,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
 
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooflattener')
+                      ->andReturn(FALSE);
+
         $instance = $this->class->getFlattener('foo');
 
         $this->assertInstanceOf(FooFlattener::class, $instance);
@@ -301,6 +308,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetPreprocessorReturnsNullIfClassNotFound(): void
     {
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('foopreprocessor')
+                      ->andReturn(FALSE);
+
+        $this->logger->shouldReceive('warning')
+                     ->once()
+                     ->with('Unable to find pipeline component: ({name})', [ 'name' => 'FooPreprocessor' ]);
+
         $this->assertNull($this->class->getPreprocessor('foo'));
     }
 
@@ -311,15 +327,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetPreprocessorFetchesInstanceFromLocator(): void
     {
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockpreprocessor')
-                      ->willReturn(TRUE);
+                      ->andReturn(TRUE);
 
-        $this->locator->expects($this->once())
-                      ->method('get')
+        $this->locator->shouldReceive('get')
+                      ->once()
                       ->with('mockpreprocessor')
-                      ->willReturn($this->preprocessor);
+                      ->andReturn($this->preprocessor);
 
         $instance = $this->class->getPreprocessor('mock');
 
@@ -335,10 +351,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('objectCache', [ 'mockpreprocessor' => $this->preprocessor ]);
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockpreprocessor')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getPreprocessor('mock');
 
@@ -354,6 +370,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
 
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('foopreprocessor')
+                      ->andReturn(FALSE);
+
         $instance = $this->class->getPreprocessor('foo');
 
         $this->assertInstanceOf(FooPreprocessor::class, $instance);
@@ -366,10 +387,14 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetProcessorReturnsNullIfClassNotFound(): void
     {
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('fooprocessor')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
+
+        $this->logger->shouldReceive('warning')
+                     ->once()
+                     ->with('Unable to find pipeline component: ({name})', [ 'name' => 'FooProcessor' ]);
 
         $this->assertNull($this->class->getProcessor('foo'));
     }
@@ -381,15 +406,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetProcessorFetchesInstanceFromLocator(): void
     {
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockprocessor')
-                      ->willReturn(TRUE);
+                      ->andReturn(TRUE);
 
-        $this->locator->expects($this->once())
-                      ->method('get')
+        $this->locator->shouldReceive('get')
+                      ->once()
                       ->with('mockprocessor')
-                      ->willReturn($this->processor);
+                      ->andReturn($this->processor);
 
         $instance = $this->class->getProcessor('mock');
 
@@ -405,10 +430,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('objectCache', [ 'mockprocessor' => $this->processor ]);
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockprocessor')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getProcessor('mock');
 
@@ -424,6 +449,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
 
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooprocessor')
+                      ->andReturn(FALSE);
+
         $instance = $this->class->getProcessor('foo');
 
         $this->assertInstanceOf(FooProcessor::class, $instance);
@@ -436,6 +466,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
      */
     public function testGetParserReturnsNullIfClassNotFound(): void
     {
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooparser')
+                      ->andReturn(FALSE);
+
+        $this->logger->shouldReceive('warning')
+                     ->once()
+                     ->with('Unable to find pipeline component: ({name})', [ 'name' => 'FooParser' ]);
+
         $this->assertNull($this->class->getParser('foo'));
     }
 
@@ -447,15 +486,15 @@ class LocatorGetInstanceTest extends LocatorTestCase
     public function testGetParserFetchesInstanceFromLocator(): void
     {
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockparser')
-                      ->willReturn(TRUE);
+                      ->andReturn(TRUE);
 
-        $this->locator->expects($this->once())
-                      ->method('get')
+        $this->locator->shouldReceive('get')
+                      ->once()
                       ->with('mockparser')
-                      ->willReturn($this->parser);
+                      ->andReturn($this->parser);
 
         $instance = $this->class->getParser('mock');
 
@@ -471,10 +510,10 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('objectCache', [ 'mockparser' => $this->parser ]);
 
-        $this->locator->expects($this->once())
-                      ->method('has')
+        $this->locator->shouldReceive('has')
+                      ->once()
                       ->with('mockparser')
-                      ->willReturn(FALSE);
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getParser('mock');
 
@@ -490,6 +529,11 @@ class LocatorGetInstanceTest extends LocatorTestCase
     {
         $this->setReflectionPropertyValue('namespaces', [ 'Pipeline', 'Pipeline\Tests\Common\Helpers' ]);
         $this->setReflectionPropertyValue('profiler', $this->profiler);
+
+        $this->locator->shouldReceive('has')
+                      ->once()
+                      ->with('fooparser')
+                      ->andReturn(FALSE);
 
         $instance = $this->class->getParser('foo');
 
