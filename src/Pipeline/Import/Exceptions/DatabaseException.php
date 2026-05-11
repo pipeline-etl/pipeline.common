@@ -17,6 +17,18 @@ use Exception;
 class DatabaseException extends Exception
 {
 
+    /**
+     * Set a more specific error message for the exception.
+     *
+     * @param string $message Error message
+     *
+     * @return void
+     */
+    public function setMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
 }
 
 ?>
