@@ -14,7 +14,7 @@ namespace Pipeline\Common;
  *
  * @phpstan-import-type FetchedData from SourceInterface
  * @phpstan-import-type Item from Node
- * @phpstan-type FlattenerFieldConfig array<string, string>
+ * @phpstan-type FlattenerFieldConfig array<string, string|bool>
  * @phpstan-type FlattenerConfig array{
  *     config?: array<string, string>,
  *     fields?: array<string, int|string|FlattenerFieldConfig>,
