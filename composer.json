@@ -22,12 +22,12 @@
         "ext-uuid": ">=1.2.0",
         "psr/container": ">=2.0",
         "psr/log": ">=3.0",
-        "lunr/ticks": "dev-master"
+        "lunr/ticks": "~0.13.0"
     },
     "require-dev": {
-        "framna-nl/php-library-justfiles": "dev-master",
+        "framna-nl/php-library-justfiles": "~1.0.0",
         "lunr/coding-standard": "0.12.0",
-        "lunr/halo": "dev-master",
+        "lunr/halo": "~0.12.0",
         "mockery/mockery": "~1.6",
         "phpstan/phpstan": "~2.1.36",
         "phpunit/phpunit": ">=10.5 <11.0",
